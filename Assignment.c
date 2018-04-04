@@ -21,21 +21,33 @@ int allocate_map(void)
     if(i == MAX_PID && j == 4700)
     return 1;
 }
+int allocate_pid()                             
+{
 
-
-void * threadcall(void * P){
-	
-        pthread_mutex_lock(&mutex);     
-        if (thread >= 100)
+	int j=1;
+       while(j>=0)
+	{
+	   if(pidArr[j].bitmap == 0)
         {
-            pthread_mutex_unlock(&mutex);
-            break;
-        }
-		thread++;
-	pthread_mutex_unlock(&mutex);
+           	if(j<threadVar)
+			{
+        		pidArr[threadVar].pid=pidArr[j].pid;
+        		pidArr[j].bitmap = 1;
+        		pidArr[threadVar].bitmap=1;
+	 		return 0;
+			}
+			else
+			{  
+	    
+            pidArr[j].pid = tid;
+            tid+=1;
+            pidArr[j].bitmap = 1;  
+            return tid ;
+        	}		
+    	}j++;
+	}
 }
 
-	
 void release_pid(int pid)                              
 {
 	int i=0;
@@ -51,6 +63,33 @@ void release_pid(int pid)
     
 }
 
+
+oid * threadCall(void* voidA )                       
+{	    
+        pthread_mutex_lock(&mutex);  
+	allocate_pid();   
+        sleep(1);
+        threadVar++;
+
+       
+
+        printf("\n\nProcess Number: %d",threadVar);
+
+        printf("\n\nProcess Id Allocated: %d\n",pidArr[threadVar-1].pid);
+    
+        if (threadVar == 31)
+       		{
+       		
+			release_pid(320);
+       		
+			release_pid(321);
+			
+			release_pid(322);
+       		}
+       		  pthread_mutex_unlock(&mutex); 
+    
+}
+	
 }
 int main()
 {
