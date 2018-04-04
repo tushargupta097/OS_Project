@@ -47,20 +47,14 @@ int allocate_pid()
     	}j++;
 	}
 }
-
 void release_pid(int pid)                              
 {
-	int i=0;
-    for( i = 0; i <= 4700; i++)
-    {
-        if(pidArr[i].pid == pid)
-        {
-        	printf("\npid released: %d",pidArr[i].pid);
-            pidArr[i].bitmap = 0;
-            
-        } 
-    }
-    
+	printf("\n------------------------------------------------------------------------------");
+	printf("\n\nProcess %d finished, releasing its process id.\n",pid);
+	sleep(2);
+    printf("\n\nprocess id for process %d released: %d\n",pid,pidArr[pid].pid);
+    pidArr[pid].bitmap = 0;
+}
 }
 
 
