@@ -1,9 +1,10 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<pthread.h>
-
-int MIN_PID=300;
-int MAX_PID=5000;
+#include <stdio.h>
+#include<stdbool.h>
+#include <stdlib.h>
+#include <pthread.h>
+#define MIN_PID 300
+#define MAX_PID 5000
+int threadCount = 1;
 pthread_mutex_t mutex;
 int tid = 300;
 struct pid_tab
@@ -11,6 +12,7 @@ struct pid_tab
     int pid;
     bool bitmap;
 }pidArr[4700];
+
 int allocate_map(void)                                
 {
     int i,j;
@@ -21,6 +23,7 @@ int allocate_map(void)
     if(i == MAX_PID && j == 4700)
     return 1;
 }
+
 int allocate_pid()                             
 {
 
@@ -29,11 +32,11 @@ int allocate_pid()
 	{
 	   if(pidArr[j].bitmap == 0)
         {
-           	if(j<threadVar)
+           	if(j<threadCount)
 			{
-        		pidArr[threadVar].pid=pidArr[j].pid;
+        		pidArr[threadCount].pid=pidArr[j].pid;
         		pidArr[j].bitmap = 1;
-        		pidArr[threadVar].bitmap=1;
+        		pidArr[threadCount].bitmap=1;
 	 		return 0;
 			}
 			else
@@ -47,6 +50,7 @@ int allocate_pid()
     	}j++;
 	}
 }
+
 void release_pid(int pid)                              
 {
 	printf("\n------------------------------------------------------------------------------");
@@ -55,35 +59,52 @@ void release_pid(int pid)
     printf("\n\nprocess id for process %d released: %d\n",pid,pidArr[pid].pid);
     pidArr[pid].bitmap = 0;
 }
-}
-
 
 void * threadCall(void* voidA )                       
 {	    
         pthread_mutex_lock(&mutex);  
-	allocate_pid();   
-        sleep(1);
-        threadVar++;
+		
+		allocate_pid();   
+        
+		sleep(1);
+        
+        printf("\n------------------------------------------------------------------------------");
 
-       
+        printf("\n\nProcess Number: %d",threadCount);
 
-        printf("\n\nProcess Number: %d",threadVar);
-
-        printf("\n\nProcess Id Allocated: %d\n",pidArr[threadVar-1].pid);
-    
-        if (threadVar == 31)
+        printf("\n\nProcess Id Allocated: %d\n",pidArr[threadCount].pid);
+    	
+		threadCount++;
+        
+		if (threadCount == 21)
        		{
+       		printf("\n------------------------------------------------------------------------------");
        		
-			release_pid(320);
+       		printf("\n\t\t********Process release initiated*******\n");
        		
-			release_pid(321);
+       		sleep(1);
+       		
+			release_pid(10);
+       		
+			release_pid(11);
 			
-			release_pid(322);
+			release_pid(13);
+       		}
+       		if (threadCount == 31)
+       		{
+       		printf("\n------------------------------------------------------------------------------");
+
+       		printf("\n\t\t********Process release initiated*******\n");
+       		
+			sleep(1);
+			           
+			release_pid(1);
+       		
+			release_pid(2);
+			
+			release_pid(21);
        		}
        		  pthread_mutex_unlock(&mutex); 
-    
-}
-	
 }
 void exec()
 {
@@ -93,7 +114,6 @@ void exec()
 		allocate_map();
 		for( z=0;z<100;z++)
 		{
-			 
 			pthread_create(&thread[z], NULL, threadCall, NULL);
 		}
 		for(z=0;z<100;z++)
@@ -103,14 +123,9 @@ void exec()
 }
 int main()
 {
-    
-
-    
     printf("\n\t\t********* Thread Creation initiated.*********");
     sleep(2); 
 	printf("\n\nProcesses will be given process id's and locks are used to avoid race condition.");      
 	sleep(3);
-    	exec();
-		return 0;
-}	
-		
+    exec();
+}
