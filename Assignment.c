@@ -61,19 +61,21 @@ void release_pid(int pid)
 }
 
 void * threadCall(void* voidA )                       
-{	    
+{	   // sleep(1);
+printf("\n\nProcess Number: %d",threadCount);
         pthread_mutex_lock(&mutex);  
-		
+
+		sleep(3);
 		allocate_pid();   
         
-		sleep(1);
-        
+		        
         printf("\n------------------------------------------------------------------------------");
 
-        printf("\n\nProcess Number: %d",threadCount);
+        
 
-        printf("\n\nProcess Id Allocated: %d\n",pidArr[threadCount].pid);
-    	
+        printf("\n\nProcess Id Allocated %d to process: %d\n",pidArr[threadCount].pid,threadCount);
+    	sleep(2);
+
 		threadCount++;
         
 		if (threadCount == 21)
@@ -114,7 +116,10 @@ void exec()
 		allocate_map();
 		for( z=0;z<100;z++)
 		{
+
 			pthread_create(&thread[z], NULL, threadCall, NULL);
+			sleep(5);
+			//printf("thread[%d]",z);
 		}
 		for(z=0;z<100;z++)
 		{
