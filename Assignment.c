@@ -53,30 +53,16 @@ int allocate_pid()
 
 void release_pid(int pid)                              
 {
-	printf("\n------------------------------------------------------------------------------");
+	//usleep(10000);
 	printf("\n\nProcess %d finished, releasing its process id.\n",pid);
-	sleep(2);
     printf("\n\nprocess id for process %d released: %d\n",pid,pidArr[pid].pid);
     pidArr[pid].bitmap = 0;
+    printf("\n------------------------------------------------------------------------------");
 }
 
 void * threadCall(void* voidA )                       
-{	   // sleep(1);
-printf("\n\nProcess Number: %d",threadCount);
-        pthread_mutex_lock(&mutex);  
+{	  
 
-		sleep(3);
-		allocate_pid();   
-        
-		        
-        printf("\n------------------------------------------------------------------------------");
-
-        
-
-        printf("\n\nProcess Id Allocated %d to process: %d\n",pidArr[threadCount].pid,threadCount);
-    	sleep(2);
-
-		threadCount++;
         
 		if (threadCount == 21)
        		{
@@ -84,15 +70,16 @@ printf("\n\nProcess Number: %d",threadCount);
        		
        		printf("\n\t\t********Process release initiated*******\n");
        		
-       		sleep(1);
+       	
        		
 			release_pid(10);
        		
 			release_pid(11);
 			
 			release_pid(13);
+			goto a;
        		}
-       		if (threadCount == 31)
+       		else if (threadCount == 31)
        		{
        		printf("\n------------------------------------------------------------------------------");
 
@@ -105,8 +92,27 @@ printf("\n\nProcess Number: %d",threadCount);
 			release_pid(2);
 			
 			release_pid(21);
+			goto a;
        		}
+       		else
+       		{
+       			a:
+       			printf("\n\nProcess Number: %d",threadCount);
+        pthread_mutex_lock(&mutex);  
+
+		sleep(2);
+		allocate_pid();   
+	        
+      
+
+        printf("\n\nProcess Id Allocated %d to process: %d\n",pidArr[threadCount].pid,threadCount);
+        printf("\n------------------------------------------------------------------------------");
+    
+
+		threadCount++;
+			   
        		  pthread_mutex_unlock(&mutex); 
+}
 }
 void exec()
 {
@@ -119,7 +125,7 @@ void exec()
 
 			pthread_create(&thread[z], NULL, threadCall, NULL);
 			sleep(5);
-			//printf("thread[%d]",z);
+		
 		}
 		for(z=0;z<100;z++)
 		{
