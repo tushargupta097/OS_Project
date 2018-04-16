@@ -13,7 +13,7 @@ struct pid_tab
     bool bitmap;
 }pidArr[4700];
 
-int allocate_map(void)                                
+int allocate_map()                                
 {
     int i,j;
     for(i = MIN_PID, j =0; i <= MAX_PID; i++, j++)
@@ -60,7 +60,7 @@ void release_pid(int pid)
     printf("\n------------------------------------------------------------------------------");
 }
 
-void * threadCall(void* voidA )                       
+void * threadCall()                       
 {	  
 
         
